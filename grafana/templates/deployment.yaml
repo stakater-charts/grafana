@@ -70,10 +70,10 @@ spec:
           {{- end }}
         {{- end }}
       - name: {{ template "name" . }}-watcher
-        image: "{{ .Values.grafana.deployment.watcher.config.image.name }}:{{ .Values.grafana.deployment.watcher.config.image.tag }}"
+        image: "{{ .Values.grafana.deployment.watcher.image.name }}:{{ .Values.grafana.deployment.watcher.image.tag }}"
         args:
-          - '{{ .Values.grafana.deployment.watcher.config.args.watcherDir }}'
-          - '{{ .Values.grafana.deployment.watcher.config.args.watcherUrl }}'
+          - '{{ .Values.grafana.deployment.watcher.args.watcherDir }}'
+          - '{{ .Values.grafana.deployment.watcher.args.watcherUrl }}'
         env:
         - name: GRAFANA_USER
           valueFrom:
@@ -85,7 +85,7 @@ spec:
             secretKeyRef:
               name: grafana-credentials
               key: password
-        {{- with .Values.grafana.deployment.watcher.config.resources }}
+        {{- with .Values.grafana.deployment.watcher.resources }}
         resources:
           {{- with .requests }}
           requests:
@@ -110,15 +110,15 @@ spec:
         - name: {{ template "name" . }}-dashboards
           mountPath: /var/grafana-dashboards
       - name: proxy
-        image: "{{ .Values.grafana.deployment.proxy.config.image.name }}:{{ .Values.grafana.deployment.proxy.config.image.tag }}"
+        image: "{{ .Values.grafana.deployment.proxy.image.name }}:{{ .Values.grafana.deployment.proxy.image.tag }}"
         args:
-          - {{ .Values.grafana.deployment.proxy.config.args.configFile }}
-          - {{ .Values.grafana.deployment.proxy.config.args.upstreamUrl }}
-          - {{ .Values.grafana.deployment.proxy.config.args.enableAuthorization }}
-          - {{ .Values.grafana.deployment.proxy.config.args.redirectionUrl }}
+          - {{ .Values.grafana.deployment.proxy.args.configFile }}
+          - {{ .Values.grafana.deployment.proxy.args.upstreamUrl }}
+          - {{ .Values.grafana.deployment.proxy.args.enableAuthorization }}
+          - {{ .Values.grafana.deployment.proxy.args.redirectionUrl }}
         volumeMounts:
-        - name: {{ .Values.grafana.deployment.proxy.config.volumeMounts.name }}
-          mountPath: {{ .Values.grafana.deployment.proxy.config.volumeMounts.mountPath }}
+        - name: {{ .Values.grafana.deployment.proxy.volumeMounts.name }}
+          mountPath: {{ .Values.grafana.deployment.proxy.volumeMounts.mountPath }}
       nodeSelector:
         failure-domain.beta.kubernetes.io/zone: us-west-2a
       volumes:

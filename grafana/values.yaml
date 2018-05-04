@@ -20,37 +20,34 @@ grafana:
           memory: 123Mi
           cpu: 123m
     watcher:
-      config:
-        image:
-          name: quay.io/coreos/grafana-watcher
-          tag: v0.0.8
-        args:
-          watcherDir: dummy
-          watcherUrl: dummy
-        resources:
-          limits:
-            cpu: 100m
-            memory: 32Mi
-          requests:
-            cpu: 50m
-            memory: 16Mi
+      image:
+        name: quay.io/coreos/grafana-watcher
+        tag: v0.0.8
+      args:
+        watcherDir: dummy
+        watcherUrl: dummy
+      resources:
+        limits:
+          cpu: 100m
+          memory: 32Mi
+        requests:
+          cpu: 50m
+          memory: 16Mi
     proxy:
-      config:
-        image:
-          name: dummy
-          tag: v2.1.1
-        args:
-          configFile: dummy
-          upstreamUrl: dummy
-          enableAuthorization: --enable-authorization-header=false
-          redirectionUrl: dummy
-        volumeMounts:
-          name: keycloak-proxy-config
-          mountPath: /etc/config
+      image:
+        name: dummy
+        tag: v2.1.1
+      args:
+        configFile: dummy
+        upstreamUrl: dummy
+        enableAuthorization: --enable-authorization-header=false
+        redirectionUrl: dummy
+      volumeMounts:
+        name: keycloak-proxy-config
+        mountPath: /etc/config
   secret:
-    config:
-      user: dummy
-      password: dummy
+    user: dummy
+    password: dummy
   service:
     expose: true
     annotations: |-
