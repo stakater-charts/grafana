@@ -14,11 +14,11 @@ grafana:
         containerPort: 1234
       resources:
         requests:
-          memory: 100Mi
-          cpu: 100m
+          memory: 123Mi
+          cpu: 123m
         limits:
-          memory: 200Mi
-          cpu: 200m
+          memory: 123Mi
+          cpu: 123m
     watcher:
       config:
         image:
@@ -37,7 +37,7 @@ grafana:
     proxy:
       config:
         image:
-          name: quay.io/gambol99/keycloak-proxy
+          name: dummy
           tag: v2.1.1
         args:
           configFile: dummy
@@ -59,7 +59,7 @@ grafana:
       kubernetes.io/ingress.class: internal-ingress
     spec:
       ports:
-        port: 80
-        protocol: TCP
-        targetPort: 80
+        port: 12
+        protocol: dummy
+        targetPort: 12
   configFiles:
