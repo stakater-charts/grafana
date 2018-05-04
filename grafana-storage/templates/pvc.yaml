@@ -1,0 +1,11 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ .Values.grafanaStorage.pvcName }}
+spec:
+  accessModes:
+    - {{ .Values.grafanaStorage.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.grafanaStorage.capacity }}
+  storageClassName: {{ .Values.grafanaStorage.storageClassName }}

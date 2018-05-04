@@ -1,0 +1,11 @@
+apiVersion: v1
+name: grafana
+description: grafana chart that runs on kubernetes
+version: 1.0.0
+keywords:
+  - grafana
+  - kubernetes
+home: https://github.com/stakater/chart-grafana
+maintainers:
+- name: Stakater
+  email: stakater@aurorasolutions.io

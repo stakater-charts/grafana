@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    labels:
+{{ include "labels.stakater" . | indent 6 }}
+{{ include "labels.chart" . | indent 6 }}
+    name: {{ template "name" . }}-dashboards
+  data: 
+{{- range $key, $value := .Values.grafana.configFiles }}
+{{ $key | indent 4}} : {{ $value | indent 4}}
+{{- end }}
