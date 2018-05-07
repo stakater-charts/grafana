@@ -17,13 +17,13 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 
 {{- define "labels.selector" -}}
 app: {{ template "name" . }}
-group: {{ .Values.grafana.labels.group }}
-provider: {{ .Values.grafana.labels.provider }}
+group: {{ .Values.grafanaStorage.labels.group }}
+provider: {{ .Values.grafanaStorage.labels.provider }}
 {{- end -}}
 
 {{- define "labels.stakater" -}}
 {{ template "labels.selector" . }}
-version: {{ .Values.grafana.labels.version | quote }}
+version: {{ .Values.grafanaStorage.labels.version | quote }}
 {{- end -}}
 
 {{- define "labels.chart" -}}

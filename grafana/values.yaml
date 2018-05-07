@@ -5,10 +5,17 @@ grafana:
     version: 4.6.3
   namespace: dev
   deployment:
+    replicas: 1
     image:
       name: grafana/grafana
       tag: "4.6.3"
     environment:
+      basicAuthEnabled: "true"
+      serverRootUrl: http://localhost:3000/{{ template "name" . }}/
+      authProxyEnabled: "true"
+      authProxyHeaderName: "X-Auth-Email"
+      authProxyHeaderProperty: email
+      authDisableLoginForm: "true"
       ports:
         name: web
         containerPort: 1234
@@ -45,6 +52,7 @@ grafana:
       volumeMounts:
         name: keycloak-proxy-config
         mountPath: /etc/config
+    persistantVolumeName: grafana-persistent-storage
   secret:
     user: dummy
     password: dummy
