@@ -7,13 +7,20 @@ metadata:
 {{ include "labels.stakater" . | indent 4 }}
 {{ include "labels.chart" . | indent 4 }}
   annotations:
-    fabric8.io/ingress.path: /{{ template "name" . }}
+    fabric8.io/ingress.path: {{ .Values.grafana.service.ingressPath }}
     fabric8.io/ingress.annotations: |-
-{{ .Values.grafana.service.annotations | indent 6 }}
+      ingress.kubernetes.io/rewrite-target: {{ .Values.grafana.service.rewriteTarget }}
+      ingress.kubernetes.io/force-ssl-redirect: {{ .Values.grafana.service.forceSslRedirect }}
+      kubernetes.io/ingress.class: {{ .Values.grafana.service.ingressClass }}
+      {{- with .Values.grafana.service.annotations }}
+      {{- range $key, $value := . }}
+      {{ $key }}: {{ $value }}
+      {{- end }}
+      {{- end }}
 spec:
   ports:
-  - port: {{ .Values.grafana.service.spec.ports.port }}
-    protocol: {{ .Values.grafana.service.spec.ports.protocol }}
-    targetPort: {{ .Values.grafana.service.spec.ports.targetPort }}
+  - port: 80
+    protocol: TCP
+    targetPort: 80
   selector:
 {{ include "labels.selector" . | indent 4 }}

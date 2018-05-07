@@ -40,7 +40,7 @@ grafana:
       args:
         configFile: dummy
         upstreamUrl: dummy
-        enableAuthorization: --enable-authorization-header=false
+        enableAuthorization: "false"
         redirectionUrl: dummy
       volumeMounts:
         name: keycloak-proxy-config
@@ -50,13 +50,9 @@ grafana:
     password: dummy
   service:
     expose: true
-    annotations: |-
-      ingress.kubernetes.io/rewrite-target: /
-      ingress.kubernetes.io/force-ssl-redirect: false
-      kubernetes.io/ingress.class: internal-ingress
-    spec:
-      ports:
-        port: 12
-        protocol: dummy
-        targetPort: 12
+    ingressPath: /grafana
+    rewriteTarget: /
+    forceSslRedirect: "false"
+    ingressClass: internal-ingress
+    annotations:
   configFiles:

@@ -72,8 +72,8 @@ spec:
       - name: {{ template "name" . }}-watcher
         image: "{{ .Values.grafana.deployment.watcher.image.name }}:{{ .Values.grafana.deployment.watcher.image.tag }}"
         args:
-          - '{{ .Values.grafana.deployment.watcher.args.watcherDir }}'
-          - '{{ .Values.grafana.deployment.watcher.args.watcherUrl }}'
+          - '--watch-dir={{ .Values.grafana.deployment.watcher.args.watcherDir }}'
+          - '--grafana-url={{ .Values.grafana.deployment.watcher.args.watcherUrl }}'
         env:
         - name: GRAFANA_USER
           valueFrom:
@@ -112,10 +112,10 @@ spec:
       - name: proxy
         image: "{{ .Values.grafana.deployment.proxy.image.name }}:{{ .Values.grafana.deployment.proxy.image.tag }}"
         args:
-          - {{ .Values.grafana.deployment.proxy.args.configFile }}
-          - {{ .Values.grafana.deployment.proxy.args.upstreamUrl }}
-          - {{ .Values.grafana.deployment.proxy.args.enableAuthorization }}
-          - {{ .Values.grafana.deployment.proxy.args.redirectionUrl }}
+          - --config={{ .Values.grafana.deployment.proxy.args.configFile }}
+          - --upstream-url={{ .Values.grafana.deployment.proxy.args.upstreamUrl }}
+          - --enable-authorization-header={{ .Values.grafana.deployment.proxy.args.enableAuthorization }}
+          - --redirection-url={{ .Values.grafana.deployment.proxy.args.redirectionUrl }}
         volumeMounts:
         - name: {{ .Values.grafana.deployment.proxy.volumeMounts.name }}
           mountPath: {{ .Values.grafana.deployment.proxy.volumeMounts.mountPath }}
