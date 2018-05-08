@@ -1,0 +1,63 @@
+grafana:
+  labels:
+    group: com.stakater.platform
+    provider: stakater
+    version: 4.6.3
+  namespace: dev
+  deployment:
+    replicas: 1
+    image:
+      name: grafana/grafana
+      tag: "4.6.3"
+    environment:
+      basicAuthEnabled: "true"
+      serverRootUrl: http://localhost:3000/grafana/
+      authProxyEnabled: "true"
+      authProxyHeaderName: "X-Auth-Email"
+      authProxyHeaderProperty: email
+      authDisableLoginForm: "true"
+      ports:
+        name: web
+        containerPort: 1234
+    watcher:
+      image:
+        name: quay.io/coreos/grafana-watcher
+        tag: v0.0.8
+      args:
+        watcherDir: dummy
+        watcherUrl: dummy
+    proxy:
+      image:
+        name: dummy
+        tag: v2.1.1
+      args:
+        configFile: dummy
+        upstreamUrl: dummy
+        enableAuthorization: "false"
+        redirectionUrl: dummy
+    persistantVolumeName: grafana-persistent-storage
+  resources:
+    requests:
+      memory: 123Mi
+      cpu: 123m
+    limits:
+      memory: 123Mi
+      cpu: 123m
+  watcherResources:
+    limits:
+      cpu: 100m
+      memory: 32Mi
+    requests:
+      cpu: 50m
+      memory: 16Mi
+  secret:
+    user: dummy
+    password: dummy
+  service:
+    expose: true
+    ingressPath: /grafana
+    rewriteTarget: /
+    forceSslRedirect: "false"
+    ingressClass: internal-ingress
+    annotations:
+  configFiles:

@@ -1,0 +1,14 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  labels:
+{{ include "labels.stakater" . | indent 4 }}
+{{ include "labels.chart" . | indent 4 }}
+  name: {{ .Values.grafanaStorage.pvcName }}
+spec:
+  accessModes:
+    - {{ .Values.grafanaStorage.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.grafanaStorage.capacity }}
+  storageClassName: {{ .Values.grafanaStorage.storageClassName }}
