@@ -43,12 +43,12 @@ spec:
         volumeMounts:
         - name: grafana-storage
           mountPath: /var/grafana-storage
-        - name: {{ .Values.grafana.deployment.persistantVolumeName }}
+        - name: grafana-persistent-storage
           mountPath: /var/lib/grafana
         ports:
         - name: {{ .Values.grafana.deployment.environment.ports.name }}
           containerPort: {{ .Values.grafana.deployment.environment.ports.containerPort }}
-        {{- with .Values.grafana.deployment.environment.resources }}
+        {{- with .Values.grafana.resources }}
         resources:
           {{- with .requests }}
           requests:
@@ -85,7 +85,7 @@ spec:
             secretKeyRef:
               name: grafana-credentials
               key: password
-        {{- with .Values.grafana.deployment.watcher.resources }}
+        {{- with .Values.grafana.watcherResources }}
         resources:
           {{- with .requests }}
           requests:
@@ -117,14 +117,14 @@ spec:
           - --enable-authorization-header={{ .Values.grafana.deployment.proxy.args.enableAuthorization }}
           - --redirection-url={{ .Values.grafana.deployment.proxy.args.redirectionUrl }}
         volumeMounts:
-        - name: {{ .Values.grafana.deployment.proxy.volumeMounts.name }}
-          mountPath: {{ .Values.grafana.deployment.proxy.volumeMounts.mountPath }}
+        - name: keycloak-proxy-config
+          mountPath: /etc/config
       nodeSelector:
         failure-domain.beta.kubernetes.io/zone: us-west-2a
       volumes:
-      - name: {{ template "name" . }}-storage
+      - name: grafana-storage
         emptyDir: {}
-      - name: {{ .Values.grafana.deployment.persistantVolumeName }}
+      - name: grafana-persistent-storage
         persistentVolumeClaim:
           claimName: {{ .Values.grafana.deployment.persistantVolumeName }}
       - name: grafana-dashboards
