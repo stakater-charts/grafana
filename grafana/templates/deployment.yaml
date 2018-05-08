@@ -8,7 +8,7 @@ metadata:
     configmap.fabric8.io/update-on-change: {{ template "name" . }}-dashboards
   name: {{ template "name" . }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.grafana.deployment.replicas }}
   template:
     metadata:
       labels:
