@@ -33,18 +33,18 @@ spec:
         - name: GF_SECURITY_ADMIN_USER
           valueFrom:
             secretKeyRef:
-              name: grafana-credentials
+              name: {{ template "name" . }}-credentials
               key: user
         - name: GF_SECURITY_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: grafana-credentials
+              name: {{ template "name" . }}-credentials
               key: password
         volumeMounts:
-        - name: grafana-storage
-          mountPath: /var/grafana-storage
-        - name: grafana-persistent-storage
-          mountPath: /var/lib/grafana
+        - name: {{ template "name" . }}-storage
+          mountPath: /var/{{ template "name" . }}-storage
+        - name: {{ template "name" . }}-persistent-storage
+          mountPath: /var/lib/{{ template "name" . }}
         ports:
         - name: {{ .Values.grafana.deployment.environment.ports.name }}
           containerPort: {{ .Values.grafana.deployment.environment.ports.containerPort }}
@@ -73,17 +73,17 @@ spec:
         image: "{{ .Values.grafana.deployment.watcher.image.name }}:{{ .Values.grafana.deployment.watcher.image.tag }}"
         args:
           - '--watch-dir={{ .Values.grafana.deployment.watcher.args.watcherDir }}'
-          - '--grafana-url={{ .Values.grafana.deployment.watcher.args.watcherUrl }}'
+          - '--{{ template "name" . }}-url={{ .Values.grafana.deployment.watcher.args.watcherUrl }}'
         env:
         - name: GRAFANA_USER
           valueFrom:
             secretKeyRef:
-              name: grafana-credentials
+              name: {{ template "name" . }}-credentials
               key: user
         - name: GRAFANA_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: grafana-credentials
+              name: {{ template "name" . }}-credentials
               key: password
         {{- with .Values.grafana.watcherResources }}
         resources:
@@ -108,7 +108,7 @@ spec:
         {{- end }}
         volumeMounts:
         - name: {{ template "name" . }}-dashboards
-          mountPath: /var/grafana-dashboards
+          mountPath: /var/{{ template "name" . }}-dashboards
       - name: proxy
         image: "{{ .Values.grafana.deployment.proxy.image.name }}:{{ .Values.grafana.deployment.proxy.image.tag }}"
         args:
@@ -122,12 +122,12 @@ spec:
       nodeSelector:
         failure-domain.beta.kubernetes.io/zone: us-west-2a
       volumes:
-      - name: grafana-storage
+      - name: {{ template "name" . }}-storage
         emptyDir: {}
-      - name: grafana-persistent-storage
+      - name: {{ template "name" . }}-persistent-storage
         persistentVolumeClaim:
           claimName: {{ .Values.grafana.deployment.persistantVolumeName }}
-      - name: grafana-dashboards
+      - name: {{ template "name" . }}-dashboards
         configMap:
           name: {{ template "name" . }}-dashboards
       - name: keycloak-proxy-config
