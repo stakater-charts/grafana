@@ -5,7 +5,7 @@ version: 1.0.0
 keywords:
   - grafana-storage
   - kubernetes
-home: https://github.com/stakater/chart-grafana
+home: https://github.com/stakater/chart-grafana-storage
 maintainers:
 - name: Stakater
   email: stakater@aurorasolutions.io
