@@ -3,18 +3,6 @@
 
 def dummy = ""
 
-toolsNode(toolsImage: 'stakater/pipeline-tools:1.5.1') {
-    container(name: 'tools') {
-        stage('Checkout') {
-            checkout scm
-        }
-
-        prepareAndUploadChart {
-            chartName = "grafana"
-        }
-        
-        prepareAndUploadChart {
-            chartName = "grafana-storage"
-        }
-    }
+prepareAndUploadCharts {
+    charts = [ "grafana", "grafana-storage" ]
 }
