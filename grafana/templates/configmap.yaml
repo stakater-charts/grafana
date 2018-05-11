@@ -11,6 +11,6 @@ items:
     name: {{ template "name" . }}-dashboards
   data:
 {{- range $key, $value := .Values.grafana.configFiles }}
-    {{ $key }:|
-{{ $value | indent 6}}
+    {{ $key }}: |
+{{ $value | indent 6 }}
 {{- end }}
