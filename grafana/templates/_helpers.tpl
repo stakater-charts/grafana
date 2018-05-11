@@ -23,7 +23,7 @@ provider: {{ .Values.grafana.labels.provider }}
 
 {{- define "labels.stakater" -}}
 {{ template "labels.selector" . }}
-version: {{ .Values.grafana.labels.version | quote }}
+version: "{{ .Values.grafana.labels.version }}"
 {{- end -}}
 
 {{- define "labels.chart" -}}
