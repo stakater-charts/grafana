@@ -109,6 +109,7 @@ spec:
         volumeMounts:
         - name: {{ template "name" . }}-dashboards
           mountPath: /var/{{ template "name" . }}-dashboards
+      {{- if .Values.grafana.deployment.proxy.enabled }}
       - name: proxy
         image: "{{ .Values.grafana.deployment.proxy.image.name }}:{{ .Values.grafana.deployment.proxy.image.tag }}"
         args:
@@ -119,6 +120,7 @@ spec:
         volumeMounts:
         - name: keycloak-proxy-config
           mountPath: /etc/config
+      {{- end }}
       nodeSelector:
         failure-domain.beta.kubernetes.io/zone: us-west-2a
       volumes:

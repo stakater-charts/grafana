@@ -27,6 +27,7 @@ grafana:
         watcherDir: dummy
         watcherUrl: dummy
     proxy:
+      enabled: false
       image:
         name: dummy
         tag: v2.1.1
