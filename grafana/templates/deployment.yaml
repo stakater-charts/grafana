@@ -122,7 +122,7 @@ spec:
           mountPath: /etc/config
       {{- end }}
       nodeSelector:
-        failure-domain.beta.kubernetes.io/zone: us-west-2a
+        failure-domain.beta.kubernetes.io/zone: {{ .Values.grafana.deployment.zone }}
       volumes:
       - name: {{ template "name" . }}-storage
         emptyDir: {}
