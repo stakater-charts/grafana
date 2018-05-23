@@ -27,8 +27,9 @@ grafana:
         watcherDir: dummy
         watcherUrl: dummy
     proxy:
+      enabled: true
       image:
-        name: dummy
+        name: quay.io/gambol99/keycloak-proxy
         tag: v2.1.1
       args:
         configFile: dummy
