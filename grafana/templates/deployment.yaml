@@ -132,6 +132,8 @@ spec:
       - name: {{ template "name" . }}-dashboards
         configMap:
           name: {{ template "name" . }}-dashboards
+      {{- if .Values.grafana.deployment.proxy.enabled }}
       - name: keycloak-proxy-config
         configMap:
           name: keycloak-proxy
+      {{- end }}
