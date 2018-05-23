@@ -6,6 +6,7 @@ grafana:
   namespace: dev
   deployment:
     replicas: 1
+    zone: eu-west-1a
     image:
       name: grafana/grafana
       tag: "4.6.3"
