@@ -19,44 +19,44 @@ grafana:
       authDisableLoginForm: "true"
       ports:
         name: web
-        containerPort: 1234
+        containerPort: 3000
     watcher:
       image:
         name: quay.io/coreos/grafana-watcher
         tag: v0.0.8
       args:
-        watcherDir: dummy
-        watcherUrl: dummy
+        watcherDir: /var/grafana-dashboards
+        watcherUrl: http://localhost:3000
     proxy:
       enabled: true
       image:
         name: quay.io/gambol99/keycloak-proxy
         tag: v2.1.1
       args:
-        configFile: dummy
-        upstreamUrl: dummy
+        configFile: /etc/config/config.yml
+        upstreamUrl: http://127.0.0.1:3000
         enableAuthorization: "false"
-        redirectionUrl: dummy
+        redirectionUrl: /grafana
     persistantVolumeName: grafana-persistent-storage
-  resources:
-    requests:
-      memory: 123Mi
-      cpu: 123m
-    limits:
-      memory: 123Mi
-      cpu: 123m
-  watcherResources:
-    limits:
-      cpu: 100m
-      memory: 32Mi
-    requests:
-      cpu: 50m
-      memory: 16Mi
+  # resources:
+  #   requests:
+  #     memory: 100Mi
+  #     cpu: 100m
+  #   limits:
+  #     memory: 200Mi
+  #     cpu: 200m
+  # watcherResources:
+  #   limits:
+  #     cpu: 100m
+  #     memory: 32Mi
+  #   requests:
+  #     cpu: 50m
+  #     memory: 16Mi
   secret:
     user: dummy
     password: dummy
   service:
-    expose: true
+    expose: "true"
     ingressPath: /grafana
     rewriteTarget: /
     forceSslRedirect: "false"

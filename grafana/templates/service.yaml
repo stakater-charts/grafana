@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ template "name" . }}
   labels:
-    expose: {{ .Values.grafana.service.expose | quote }}
+    expose: "{{ .Values.grafana.service.expose }}"
 {{ include "labels.stakater" . | indent 4 }}
 {{ include "labels.chart" . | indent 4 }}
   annotations:
@@ -21,6 +21,10 @@ spec:
   ports:
   - port: 80
     protocol: TCP
+{{- if .Values.grafana.deployment.proxy.enabled }}
     targetPort: 80
+{{- else }}
+    targetPort: {{ .Values.grafana.deployment.environment.ports.containerPort }}
+{{- end }}
   selector:
 {{ include "labels.selector" . | indent 4 }}
