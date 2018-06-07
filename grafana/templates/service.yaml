@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "name" . }}
+  name: {{ template "grafana.name" . }}
   labels:
     expose: "{{ .Values.grafana.service.expose }}"
-{{ include "labels.stakater" . | indent 4 }}
-{{ include "labels.chart" . | indent 4 }}
+{{ include "grafana.labels.stakater" . | indent 4 }}
+{{ include "grafana.labels.chart" . | indent 4 }}
   annotations:
     fabric8.io/ingress.path: {{ .Values.grafana.service.ingressPath }}
     fabric8.io/ingress.annotations: |-
@@ -27,4 +27,4 @@ spec:
     targetPort: {{ .Values.grafana.deployment.environment.ports.containerPort }}
 {{- end }}
   selector:
-{{ include "labels.selector" . | indent 4 }}
+{{ include "grafana.labels.selector" . | indent 4 }}

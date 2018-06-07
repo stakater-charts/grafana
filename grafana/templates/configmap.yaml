@@ -6,9 +6,9 @@ items:
   kind: ConfigMap
   metadata:
     labels:
-{{ include "labels.stakater" . | indent 6 }}
-{{ include "labels.chart" . | indent 6 }}
-    name: {{ template "name" . }}-dashboards
+{{ include "grafana.labels.stakater" . | indent 6 }}
+{{ include "grafana.labels.chart" . | indent 6 }}
+    name: {{ template "grafana.name" . }}-dashboards
   data:
 {{- range $key, $value := .Values.grafana.configFiles }}
     {{ $key }}: |

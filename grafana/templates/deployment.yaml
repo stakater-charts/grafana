@@ -2,20 +2,20 @@ apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
   labels:
-{{ include "labels.stakater" . | indent 4 }}
-{{ include "labels.chart" . | indent 4 }}
+{{ include "grafana.labels.stakater" . | indent 4 }}
+{{ include "grafana.labels.chart" . | indent 4 }}
   annotations:
-    configmap.fabric8.io/update-on-change: {{ template "name" . }}-dashboards
-  name: {{ template "name" . }}
+    configmap.fabric8.io/update-on-change: {{ template "grafana.name" . }}-dashboards
+  name: {{ template "grafana.name" . }}
 spec:
   replicas: {{ .Values.grafana.deployment.replicas }}
   template:
     metadata:
       labels:
-{{ include "labels.selector" . | indent 8 }}
+{{ include "grafana.labels.selector" . | indent 8 }}
     spec:
       containers:
-      - name: {{ template "name" . }}
+      - name: {{ template "grafana.name" . }}
         image: "{{ .Values.grafana.deployment.image.name }}:{{ .Values.grafana.deployment.image.tag }}"
         env:
         - name: GF_AUTH_BASIC_ENABLED
@@ -33,18 +33,18 @@ spec:
         - name: GF_SECURITY_ADMIN_USER
           valueFrom:
             secretKeyRef:
-              name: {{ template "name" . }}-credentials
+              name: {{ template "grafana.name" . }}-credentials
               key: user
         - name: GF_SECURITY_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ template "name" . }}-credentials
+              name: {{ template "grafana.name" . }}-credentials
               key: password
         volumeMounts:
-        - name: {{ template "name" . }}-storage
-          mountPath: /var/{{ template "name" . }}-storage
-        - name: {{ template "name" . }}-persistent-storage
-          mountPath: /var/lib/{{ template "name" . }}
+        - name: {{ template "grafana.name" . }}-storage
+          mountPath: /var/{{ template "grafana.name" . }}-storage
+        - name: {{ template "grafana.name" . }}-persistent-storage
+          mountPath: /var/lib/{{ template "grafana.name" . }}
         ports:
         - name: {{ .Values.grafana.deployment.environment.ports.name }}
           containerPort: {{ .Values.grafana.deployment.environment.ports.containerPort }}
@@ -69,21 +69,21 @@ spec:
             {{- end }}
           {{- end }}
         {{- end }}
-      - name: {{ template "name" . }}-watcher
+      - name: {{ template "grafana.name" . }}-watcher
         image: "{{ .Values.grafana.deployment.watcher.image.name }}:{{ .Values.grafana.deployment.watcher.image.tag }}"
         args:
           - '--watch-dir={{ .Values.grafana.deployment.watcher.args.watcherDir }}'
-          - '--{{ template "name" . }}-url={{ .Values.grafana.deployment.watcher.args.watcherUrl }}'
+          - '--{{ template "grafana.name" . }}-url={{ .Values.grafana.deployment.watcher.args.watcherUrl }}'
         env:
         - name: GRAFANA_USER
           valueFrom:
             secretKeyRef:
-              name: {{ template "name" . }}-credentials
+              name: {{ template "grafana.name" . }}-credentials
               key: user
         - name: GRAFANA_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ template "name" . }}-credentials
+              name: {{ template "grafana.name" . }}-credentials
               key: password
         {{- with .Values.grafana.watcherResources }}
         resources:
@@ -107,8 +107,8 @@ spec:
           {{- end }}
         {{- end }}
         volumeMounts:
-        - name: {{ template "name" . }}-dashboards
-          mountPath: /var/{{ template "name" . }}-dashboards
+        - name: {{ template "grafana.name" . }}-dashboards
+          mountPath: /var/{{ template "grafana.name" . }}-dashboards
       {{- if .Values.grafana.deployment.proxy.enabled }}
       - name: proxy
         image: "{{ .Values.grafana.deployment.proxy.image.name }}:{{ .Values.grafana.deployment.proxy.image.tag }}"
@@ -124,14 +124,14 @@ spec:
       nodeSelector:
         failure-domain.beta.kubernetes.io/zone: {{ .Values.grafana.deployment.zone }}
       volumes:
-      - name: {{ template "name" . }}-storage
+      - name: {{ template "grafana.name" . }}-storage
         emptyDir: {}
-      - name: {{ template "name" . }}-persistent-storage
+      - name: {{ template "grafana.name" . }}-persistent-storage
         persistentVolumeClaim:
           claimName: {{ .Values.grafana.deployment.persistantVolumeName }}
-      - name: {{ template "name" . }}-dashboards
+      - name: {{ template "grafana.name" . }}-dashboards
         configMap:
-          name: {{ template "name" . }}-dashboards
+          name: {{ template "grafana.name" . }}-dashboards
       {{- if .Values.grafana.deployment.proxy.enabled }}
       - name: keycloak-proxy-config
         configMap:
