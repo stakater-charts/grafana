@@ -2,8 +2,8 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   labels:
-{{ include "labels.stakater" . | indent 4 }}
-{{ include "labels.chart" . | indent 4 }}
+{{ include "grafana-storage.labels.stakater" . | indent 4 }}
+{{ include "grafana-storage.labels.chart" . | indent 4 }}
   name: {{ .Values.grafanaStorage.pvcName }}
 spec:
   accessModes:
