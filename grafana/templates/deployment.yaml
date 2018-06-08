@@ -4,8 +4,8 @@ metadata:
   labels:
 {{ include "grafana.labels.stakater" . | indent 4 }}
 {{ include "grafana.labels.chart" . | indent 4 }}
+{{- with .Values.grafana.annotations }}
   annotations:
-  {{- with .Values.grafana.annotations }}
     configmap.fabric8.io/update-on-change: {{ .configmapFabric8ioUpdateOnChange }}
   {{- end}}
   name: {{ template "grafana.name" . }}
