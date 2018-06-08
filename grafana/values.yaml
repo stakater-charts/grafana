@@ -3,6 +3,8 @@ grafana:
     group: com.stakater.platform
     provider: stakater
     version: 4.6.3
+  annotations: 
+    configmapFabric8ioUpdateOnChange: grafana-dashboards
   namespace: dev
   deployment:
     replicas: 1
