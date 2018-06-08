@@ -5,7 +5,9 @@ metadata:
 {{ include "grafana.labels.stakater" . | indent 4 }}
 {{ include "grafana.labels.chart" . | indent 4 }}
   annotations:
-    configmap.fabric8.io/update-on-change: {{ template "grafana.name" . }}-dashboards
+  {{- with .Values.grafana.annotations }}
+    configmap.fabric8.io/update-on-change: {{ .configmapFabric8ioUpdateOnChange }}
+  {{- end}}
   name: {{ template "grafana.name" . }}
 spec:
   replicas: {{ .Values.grafana.deployment.replicas }}
