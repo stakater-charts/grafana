@@ -5,7 +5,6 @@ grafana:
     version: 4.6.3
   annotations: 
     configmapFabric8ioUpdateOnChange: grafana-dashboards
-  namespace: dev
   deployment:
     replicas: 1
     zone: eu-west-1a

@@ -5,4 +5,5 @@ def dummy = ""
 
 prepareAndUploadCharts {
     charts = [ "grafana", "grafana-storage" ]
+    isPublic = true
 }
