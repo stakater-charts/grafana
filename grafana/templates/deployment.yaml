@@ -123,8 +123,10 @@ spec:
         - name: keycloak-proxy-config
           mountPath: /etc/config
       {{- end }}
+      {{- if .Values.grafana.deployment.nodeSelector }}  
       nodeSelector:
-        failure-domain.beta.kubernetes.io/zone: {{ .Values.grafana.deployment.zone }}
+        {{ .Values.grafana.deployment.nodeSelector.key }}: {{ .Values.grafana.deployment.nodeSelector.value }}
+      {{- end }}      
       volumes:
       - name: {{ template "grafana.name" . }}-storage
         emptyDir: {}
