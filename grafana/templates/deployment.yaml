@@ -19,6 +19,16 @@ spec:
       containers:
       - name: {{ template "grafana.name" . }}
         image: "{{ .Values.grafana.deployment.image.name }}:{{ .Values.grafana.deployment.image.tag }}"
+        readinessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.grafana.deployment.environment.ports.containerPort }}
+          initialDelaySeconds: 60            
+        livenessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.grafana.deployment.environment.ports.containerPort }}
+          initialDelaySeconds: 80 
         env:
         - name: GF_AUTH_BASIC_ENABLED
           value: "{{ .Values.grafana.deployment.environment.basicAuthEnabled }}"
