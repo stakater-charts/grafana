@@ -16,6 +16,18 @@ spec:
       labels:
 {{ include "grafana.labels.selector" . | indent 8 }}
     spec:
+      initContainers:
+      - name: envvar-substitution
+        image: fabric8/envsubst-file:1.0.0
+        imagePullPolicy: IfNotPresent
+        args:
+        - "pods-health-overview-dashboard.json"
+        env:
+        - name: GRAFANA_URL
+          valueFrom:
+            configMapKeyRef:
+              name: grafana
+              key: grafana.url
       containers:
       - name: {{ template "grafana.name" . }}
         image: "{{ .Values.grafana.deployment.image.name }}:{{ .Values.grafana.deployment.image.tag }}"
