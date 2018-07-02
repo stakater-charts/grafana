@@ -136,8 +136,9 @@ spec:
           {{- end }}
         {{- end }}
         volumeMounts:
-        - mountPath: /var/grafana-dashboards
-          name: grafana-subst-config
+        - name: grafana-subst-config
+          mountPath: /var/{{ template "grafana.name" . }}-dashboards
+          
       {{- if .Values.grafana.deployment.proxy.enabled }}
       - name: proxy
         image: "{{ .Values.grafana.deployment.proxy.image.name }}:{{ .Values.grafana.deployment.proxy.image.tag }}"
