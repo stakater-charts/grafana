@@ -18,7 +18,7 @@ spec:
     spec:
       initContainers:
       - name: envvar-substitution
-        image: fabric8/envsubst-file:1.0.0
+        image: fabric8/envsubst-file:1.0.2
         imagePullPolicy: IfNotPresent
         args:
         - "pods-health-overview-dashboard.json"
@@ -26,8 +26,13 @@ spec:
         - name: GRAFANA_URL
           valueFrom:
             configMapKeyRef:
-              name: grafana
+              name: {{ template "grafana.name" . }}-dashboards
               key: grafana.url
+        volumeMounts:
+          - name: {{ template "grafana.name" . }}-dashboards
+            mountPath: /workdir
+          - name: grafana-subst-config
+            mountPath: /processed
       containers:
       - name: {{ template "grafana.name" . }}
         image: "{{ .Values.grafana.deployment.image.name }}:{{ .Values.grafana.deployment.image.tag }}"
@@ -131,8 +136,8 @@ spec:
           {{- end }}
         {{- end }}
         volumeMounts:
-        - name: {{ template "grafana.name" . }}-dashboards
-          mountPath: /var/{{ template "grafana.name" . }}-dashboards
+        - mountPath: /var/grafana-dashboards
+          name: grafana-subst-config
       {{- if .Values.grafana.deployment.proxy.enabled }}
       - name: proxy
         image: "{{ .Values.grafana.deployment.proxy.image.name }}:{{ .Values.grafana.deployment.proxy.image.tag }}"
@@ -155,6 +160,8 @@ spec:
       - name: {{ template "grafana.name" . }}-persistent-storage
         persistentVolumeClaim:
           claimName: {{ .Values.grafana.deployment.persistantVolumeName }}
+      - emptyDir: {}
+        name: grafana-subst-config
       - name: {{ template "grafana.name" . }}-dashboards
         configMap:
           name: {{ template "grafana.name" . }}-dashboards
