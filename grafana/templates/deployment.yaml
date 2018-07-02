@@ -155,6 +155,7 @@ spec:
       nodeSelector:
         {{ .Values.grafana.deployment.nodeSelector.key }}: {{ .Values.grafana.deployment.nodeSelector.value }}
       {{- end }}      
+      securityContext: {}
       volumes:
       - name: {{ template "grafana.name" . }}-storage
         emptyDir: {}
