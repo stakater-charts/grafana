@@ -6,6 +6,7 @@ grafana:
   annotations: 
     configmapFabric8ioUpdateOnChange: grafana-dashboards
   deployment:
+    clearSecurityContext: false
     replicas: 1
     # nodeSelector:
     #   key: failure-domain.beta.kubernetes.io/zone
