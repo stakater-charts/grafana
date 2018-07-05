@@ -19,7 +19,8 @@ grafana:
       tag: "4.6.3"
     environment:
       basicAuthEnabled: "true"
-      serverRootUrl: http://localhost:3000/grafana/
+      serverRootUrl: http://localhost:3000
+      path: /grafana
       authProxyEnabled: "true"
       authProxyHeaderName: "X-Auth-Email"
       authProxyHeaderProperty: email

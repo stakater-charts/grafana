@@ -38,19 +38,19 @@ spec:
         image: "{{ .Values.grafana.deployment.image.name }}:{{ .Values.grafana.deployment.image.tag }}"
         readinessProbe:
           httpGet:
-            path: /
+            path: {{ .Values.grafana.deployment.environment.path }}
             port: {{ .Values.grafana.deployment.environment.ports.containerPort }}
           initialDelaySeconds: 60            
         livenessProbe:
           httpGet:
-            path: /
+            path: {{ .Values.grafana.deployment.environment.path }}
             port: {{ .Values.grafana.deployment.environment.ports.containerPort }}
           initialDelaySeconds: 80 
         env:
         - name: GF_AUTH_BASIC_ENABLED
           value: "{{ .Values.grafana.deployment.environment.basicAuthEnabled }}"
         - name: GF_SERVER_ROOT_URL
-          value: "{{ .Values.grafana.deployment.environment.serverRootUrl }}"
+          value: "{{ .Values.grafana.deployment.environment.serverRootUrl }}{{ .Values.grafana.deployment.environment.path }}"
         - name: GF_AUTH_PROXY_ENABLED
           value: "{{ .Values.grafana.deployment.environment.authProxyEnabled }}"
         - name: GF_AUTH_PROXY_HEADER_NAME
