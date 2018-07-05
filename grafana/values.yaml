@@ -3,6 +3,9 @@ grafana:
     group: com.stakater.platform
     provider: stakater
     version: 4.6.3
+  forecastle: {}
+    # icon: https://cdn-images-1.medium.com/max/521/0*D__TQ7qMdoq3Y7kP.png
+    # expose: "true"
   annotations: 
     configmapFabric8ioUpdateOnChange: grafana-dashboards
   deployment:

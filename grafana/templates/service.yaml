@@ -12,6 +12,12 @@ metadata:
       ingress.kubernetes.io/rewrite-target: {{ .Values.grafana.service.rewriteTarget }}
       ingress.kubernetes.io/force-ssl-redirect: {{ .Values.grafana.service.forceSslRedirect }}
       kubernetes.io/ingress.class: {{ .Values.grafana.service.ingressClass }}
+    {{- with .Values.grafana.forecastle.expose }}
+      forecastle.stakater.com/expose: {{ . }}
+    {{- end }}
+    {{- with .Values.grafana.forecastle.icon }}
+      forecastle.stakater.com/icon: {{ . }}
+    {{- end }}
       {{- with .Values.grafana.service.annotations }}
       {{- range $key, $value := . }}
       {{ $key }}: {{ $value }}
