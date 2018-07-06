@@ -102,7 +102,7 @@ spec:
         image: "{{ .Values.grafana.deployment.watcher.image.name }}:{{ .Values.grafana.deployment.watcher.image.tag }}"
         args:
           - '--watch-dir={{ .Values.grafana.deployment.watcher.args.watcherDir }}'
-          - '--{{ template "grafana.name" . }}-url={{ .Values.grafana.deployment.watcher.args.watcherUrl }}'
+          - '--{{ template "grafana.name" . }}-url={{ .Values.grafana.deployment.environment.serverRootUrl }}{{ .Values.grafana.deployment.environment.path }}'
         env:
         - name: GRAFANA_USER
           valueFrom:

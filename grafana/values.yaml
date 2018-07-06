@@ -33,8 +33,7 @@ grafana:
         name: quay.io/coreos/grafana-watcher
         tag: v0.0.8
       args:
-        watcherDir: /var/grafana-dashboards
-        watcherUrl: http://localhost:3000
+        watcherDir: /var/grafana-dashboards        
     proxy:
       enabled: true
       image:
