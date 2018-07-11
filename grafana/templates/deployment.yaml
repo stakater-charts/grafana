@@ -22,6 +22,15 @@ spec:
         imagePullPolicy: IfNotPresent
         args:
         - "pods-health-overview-dashboard.json"
+        - "deployment-dashboard.json"
+        - "kubernetes-cluster-health-dashboard.json"
+        - "kubernetes-cluster-monitoring-dashboard.json"
+        - "kubernetes-cluster-status-dashboard.json"
+        - "kubernetes-cluster-usage-dashboard.json"
+        - "kubernetes-resource-requests-dashboard.json"
+        - "nodes-dashboard.json"
+        - "pods-dashboard.json"
+        - "prometheus-datasource.json"
         env:
         - name: GRAFANA_URL
           valueFrom:
