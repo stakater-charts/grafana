@@ -16,6 +16,7 @@ spec:
       labels:
 {{ include "grafana.labels.selector" . | indent 8 }}
     spec:
+    {{- if .Values.grafana.shouldUseGenericUrl }}
       initContainers:
       - name: envvar-substitution
         image: fabric8/envsubst-file:1.0.2
@@ -35,6 +36,7 @@ spec:
             mountPath: /workdir
           - name: grafana-subst-config
             mountPath: /processed
+    {{- end }}
       containers:
       - name: {{ template "grafana.name" . }}
         image: "{{ .Values.grafana.deployment.image.name }}:{{ .Values.grafana.deployment.image.tag }}"
@@ -137,9 +139,14 @@ spec:
             {{- end }}
           {{- end }}
         {{- end }}
-        volumeMounts:
+        volumeMounts:                
+      {{- if .Values.grafana.shouldUseGenericUrl }}
         - name: grafana-subst-config
           mountPath: /var/{{ template "grafana.name" . }}-dashboards
+      {{- else }}
+        - name: {{ template "grafana.name" . }}-dashboards
+          mountPath: /var/{{ template "grafana.name" . }}-dashboards
+      {{- end }}
           
       {{- if .Values.grafana.deployment.proxy.enabled }}
       - name: proxy
@@ -166,8 +173,10 @@ spec:
       - name: {{ template "grafana.name" . }}-persistent-storage
         persistentVolumeClaim:
           claimName: {{ .Values.grafana.deployment.persistantVolumeName }}
+    {{- if .Values.grafana.shouldUseGenericUrl }}
       - emptyDir: {}
         name: grafana-subst-config
+    {{- end }}
       - name: {{ template "grafana.name" . }}-dashboards
         configMap:
           name: {{ template "grafana.name" . }}-dashboards
