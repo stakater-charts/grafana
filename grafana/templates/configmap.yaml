@@ -5,14 +5,18 @@ items:
 - apiVersion: v1
   kind: ConfigMap
   metadata:
+  {{- if .Values.grafana.shouldUseGenericUrl }}
     annotations:      
       expose.service-key.config.fabric8.io/grafana: grafana.url
+  {{- end }}
     labels:
 {{ include "grafana.labels.stakater" . | indent 6 }}
 {{ include "grafana.labels.chart" . | indent 6 }}
     name: {{ template "grafana.name" . }}-dashboards
   data:
+  {{- if .Values.grafana.shouldUseGenericUrl }}
     grafana.url: http://grafana
+  {{- end }}
 {{- range $key, $value := .Values.grafana.configFiles }}
     {{ $key }}: |
 {{ $value | indent 6 }}

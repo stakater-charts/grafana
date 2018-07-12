@@ -69,4 +69,5 @@ grafana:
     forceSslRedirect: "false"
     ingressClass: internal-ingress
     annotations:
+  shouldUseGenericUrl: false     # if true, use the init-container to replace the values in the configmaps
   configFiles:
