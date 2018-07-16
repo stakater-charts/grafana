@@ -59,7 +59,7 @@ grafana:
   #   requests:
   #     cpu: 50m
   #     memory: 16Mi
-  secret:
+  secrets:
     user: dummy
     password: dummy
   service:
