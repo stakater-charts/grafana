@@ -40,6 +40,8 @@ spec:
       containers:
       - name: {{ template "grafana.name" . }}
         image: "{{ .Values.grafana.deployment.image.name }}:{{ .Values.grafana.deployment.image.tag }}"
+        securityContext:
+          runAsUser: 0
         readinessProbe:
           httpGet:
             path: {{ .Values.grafana.deployment.environment.path }}
