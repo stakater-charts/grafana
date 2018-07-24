@@ -14,6 +14,8 @@ grafana:
     # nodeSelector:
     #   key: failure-domain.beta.kubernetes.io/zone
     #   value: us-west-2a    
+    container: 
+      clearSecurityContext: false
     image:
       name: grafana/grafana
       tag: "5.0.4"

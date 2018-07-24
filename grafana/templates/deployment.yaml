@@ -39,7 +39,10 @@ spec:
     {{- end }}
       containers:
       - name: {{ template "grafana.name" . }}
-        image: "{{ .Values.grafana.deployment.image.name }}:{{ .Values.grafana.deployment.image.tag }}"          
+        image: "{{ .Values.grafana.deployment.image.name }}:{{ .Values.grafana.deployment.image.tag }}"
+        {{- if .Values.grafana.deployment.container.clearSecurityContext }}
+        securityContext: {}          
+        {{- end }}
         readinessProbe:
           httpGet:
             path: {{ .Values.grafana.deployment.environment.path }}
