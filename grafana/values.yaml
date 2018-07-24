@@ -1,4 +1,5 @@
 grafana:
+  useOpenShift: true
   labels:
     group: com.stakater.platform
     provider: stakater
