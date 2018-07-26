@@ -6,7 +6,7 @@ metadata:
   name: {{ template "grafana.name" . }}
   namespace: {{ .Release.Namespace }}
 ---
-apiVersion: rbac.authorization.k8s.io/v1
+apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
   name: {{ template "grafana.name" . }}
@@ -19,7 +19,7 @@ subjects:
   name: {{ template "grafana.name" . }}
   namespace: {{ .Release.Namespace }}
 ---
-apiVersion: rbac.authorization.k8s.io/v1
+apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
   name: {{ template "grafana.name" . }}
