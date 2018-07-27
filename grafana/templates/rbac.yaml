@@ -4,12 +4,18 @@ metadata:
   annotations:
     serviceaccounts.openshift.io/oauth-redirectreference.grafana: '{"kind":"OAuthRedirectReference","apiVersion":"v1","reference":{"kind":"Route","name":"grafana"}}'
   name: {{ template "grafana.name" . }}
+  labels:
+{{ include "grafana.labels.stakater" . | indent 4 }}
+{{ include "grafana.labels.chart" . | indent 4 }}
   namespace: {{ .Release.Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
   name: {{ template "grafana.name" . }}
+  labels:
+{{ include "grafana.labels.stakater" . | indent 4 }}
+{{ include "grafana.labels.chart" . | indent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -23,6 +29,9 @@ apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
   name: {{ template "grafana.name" . }}
+  labels:
+{{ include "grafana.labels.stakater" . | indent 4 }}
+{{ include "grafana.labels.chart" . | indent 4 }}
 rules:
 - apiGroups:
   - authentication.k8s.io
