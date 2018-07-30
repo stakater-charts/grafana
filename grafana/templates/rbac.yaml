@@ -3,7 +3,7 @@ kind: ServiceAccount
 metadata:
   annotations:
     serviceaccounts.openshift.io/oauth-redirectreference.grafana: '{"kind":"OAuthRedirectReference","apiVersion":"v1","reference":{"kind":"Route","name":"grafana"}}'
-  name: {{ template "grafana.name" . }}
+  name: {{ template "grafana.name" . }}-{{ .Release.Namespace }}
   labels:
 {{ include "grafana.labels.stakater" . | indent 4 }}
 {{ include "grafana.labels.chart" . | indent 4 }}
@@ -12,23 +12,23 @@ metadata:
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ template "grafana.name" . }}
+  name: {{ template "grafana.name" . }}-{{ .Release.Namespace }}
   labels:
 {{ include "grafana.labels.stakater" . | indent 4 }}
 {{ include "grafana.labels.chart" . | indent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ template "grafana.name" . }}
+  name: {{ template "grafana.name" . }}-{{ .Release.Namespace }}
 subjects:
 - kind: ServiceAccount
-  name: {{ template "grafana.name" . }}
+  name: {{ template "grafana.name" . }}-{{ .Release.Namespace }}
   namespace: {{ .Release.Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
-  name: {{ template "grafana.name" . }}
+  name: {{ template "grafana.name" . }}-{{ .Release.Namespace }}
   labels:
 {{ include "grafana.labels.stakater" . | indent 4 }}
 {{ include "grafana.labels.chart" . | indent 4 }}
