@@ -9,7 +9,7 @@ grafana:
     # expose: "true"
   annotations: 
     configmapReloader: grafana-dashboards
-    secretReloader: grafana-credentials
+    secretReloader: grafana-credentials,grafana-config
   deployment:
     clearSecurityContext: false
     replicas: 1
