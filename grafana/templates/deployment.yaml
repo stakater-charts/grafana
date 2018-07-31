@@ -125,7 +125,7 @@ spec:
         {{ .Values.grafana.deployment.nodeSelector.key }}: {{ .Values.grafana.deployment.nodeSelector.value }}
       {{- end }} 
       securityContext: {}
-      serviceAccountName: grafana
+      serviceAccountName: {{ template "grafana.name" . }}-{{ .Release.Namespace }}
       volumes:
       - name: {{ template "grafana.name" . }}-storage
         emptyDir: {}
