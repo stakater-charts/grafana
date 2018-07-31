@@ -7,7 +7,8 @@ metadata:
 {{ include "grafana.labels.chart" . | indent 4 }}
 {{- with .Values.grafana.annotations }}
   annotations:
-    configmap.fabric8.io/update-on-change: {{ .configmapFabric8ioUpdateOnChange }}
+    configmap.reloader.stakater.com/reload: {{ .configmapReloader }}
+    secret.reloader.stakater.com/reload: {{ .secretReloader }}
   {{- end}}
   name: {{ template "grafana.name" . }}
 spec:
