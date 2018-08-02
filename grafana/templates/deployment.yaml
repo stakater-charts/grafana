@@ -21,7 +21,7 @@ spec:
       containers:
       - args:
         - -config=/etc/grafana/grafana.ini
-        image: grafana/grafana:5.2.1
+        image: "{{ .Values.grafana.deployment.image.name }}:{{ .Values.grafana.deployment.image.tag }}"
         name: {{ template "grafana.name" . }}
         readinessProbe:
           httpGet:

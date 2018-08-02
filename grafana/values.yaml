@@ -1,9 +1,9 @@
 grafana:
-  useOpenShift: false
+  useOpenShift: true
   labels:
     group: com.stakater.platform
     provider: stakater
-    version: 5.0.4
+    version: 5.2.1
   forecastle: {}
     # icon: https://cdn-images-1.medium.com/max/521/0*D__TQ7qMdoq3Y7kP.png
     # expose: "true"
@@ -20,7 +20,7 @@ grafana:
       clearSecurityContext: false
     image:
       name: grafana/grafana
-      tag: "5.0.4"
+      tag: "5.2.1"
     environment:
       basicAuthEnabled: "true"
       serverRootUrl: http://localhost:3000
