@@ -1,4 +1,3 @@
-{{- if .Values.grafana.useOpenShift }}
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
@@ -9,146 +8,6 @@ metadata:
   annotations:
     configmap.reloader.stakater.com/reload: {{ .configmapReloader }}
     secret.reloader.stakater.com/reload: {{ .secretReloader }}
-  {{- end}}
-  name: {{ template "grafana.name" . }}
-spec:
-  replicas: {{ .Values.grafana.deployment.replicas }}
-  template:
-    metadata:
-      labels:
-{{ include "grafana.labels.selector" . | indent 8 }}
-    spec:
-      containers:
-      - args:
-        - -config=/etc/grafana/grafana.ini
-        image: "{{ .Values.grafana.deployment.image.name }}:{{ .Values.grafana.deployment.image.tag }}"
-        name: {{ template "grafana.name" . }}
-        readinessProbe:
-          httpGet:
-            path: {{ .Values.grafana.deployment.environment.path }}
-            port: {{ .Values.grafana.deployment.environment.ports.containerPort }}
-          initialDelaySeconds: 60            
-        livenessProbe:
-          httpGet:
-            path: {{ .Values.grafana.deployment.environment.path }}
-            port: {{ .Values.grafana.deployment.environment.ports.containerPort }}
-          initialDelaySeconds: 80 
-        env:
-        - name: GF_AUTH_BASIC_ENABLED
-          value: "{{ .Values.grafana.deployment.environment.basicAuthEnabled }}"
-        - name: GF_SERVER_ROOT_URL
-          value: "{{ .Values.grafana.deployment.environment.serverRootUrl }}{{ .Values.grafana.deployment.environment.path }}"
-        - name: GF_AUTH_PROXY_ENABLED
-          value: "{{ .Values.grafana.deployment.environment.authProxyEnabled }}"
-        - name: GF_AUTH_PROXY_HEADER_NAME
-          value: "{{ .Values.grafana.deployment.environment.authProxyHeaderName }}"
-        - name: GF_AUTH_PROXY_HEADER_PROPERTY
-          value: "{{ .Values.grafana.deployment.environment.authProxyHeaderProperty }}"
-        - name: GF_AUTH_DISABLE_LOGIN_FORM
-          value: "{{ .Values.grafana.deployment.environment.authDisableLoginForm }}"
-        - name: GF_SECURITY_ADMIN_USER
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "grafana.name" . }}-credentials
-              key: user
-        - name: GF_SECURITY_ADMIN_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "grafana.name" . }}-credentials
-              key: password
-        ports:
-        - name: {{ .Values.grafana.deployment.environment.ports.name }}
-          containerPort: {{ .Values.grafana.deployment.environment.ports.containerPort }}
-        {{- with .Values.grafana.resources }}
-        resources:
-          {{- with .requests }}
-          requests:
-            {{- with .memory }}
-            memory: {{ . }}
-            {{- end }}
-            {{- with .cpu }}
-            cpu: {{ . }}
-            {{- end }}
-          {{- end }}
-          {{- with .limits }}
-          limits:
-            {{- with .memory }}
-            memory: {{ . }}
-            {{- end }}
-            {{- with .cpu }}
-            cpu: {{ . }}
-            {{- end }}
-          {{- end }}
-        {{- end }}
-      - name: {{ template "grafana.name" . }}-watcher
-        image: "{{ .Values.grafana.deployment.watcher.image.name }}:{{ .Values.grafana.deployment.watcher.image.tag }}"
-        args:
-          - '--watch-dir={{ .Values.grafana.deployment.watcher.args.watcherDir }}'
-          - '--{{ template "grafana.name" . }}-url={{ .Values.grafana.deployment.environment.serverRootUrl }}{{ .Values.grafana.deployment.environment.path }}'
-        env:
-        - name: GRAFANA_USER
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "grafana.name" . }}-credentials
-              key: user
-        - name: GRAFANA_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "grafana.name" . }}-credentials
-              key: password
-        {{- with .Values.grafana.watcherResources }}
-        resources:
-          {{- with .requests }}
-          requests:
-            {{- with .memory }}
-            memory: "{{ . }}"
-            {{- end }}
-            {{- with .cpu }}
-            cpu: "{{ . }}"
-            {{- end }}
-          {{- end }}
-          {{- with .limits }}
-          limits:
-            {{- with .memory }}
-            memory: "{{ . }}"
-            {{- end }}
-            {{- with .cpu }}
-            cpu: "{{ . }}"
-            {{- end }}
-          {{- end }}
-        {{- end }}
-        volumeMounts:
-        - name: {{ template "grafana.name" . }}-dashboards
-          mountPath: /var/{{ template "grafana.name" . }}-dashboards
-          readOnly: false              
-      {{- if .Values.grafana.deployment.nodeSelector }}  
-      nodeSelector:
-        {{ .Values.grafana.deployment.nodeSelector.key }}: {{ .Values.grafana.deployment.nodeSelector.value }}
-      {{- end }} 
-      securityContext: {}
-      serviceAccountName: {{ template "grafana.name" . }}-{{ .Release.Namespace }}
-      volumes:
-      - name: {{ template "grafana.name" . }}-storage
-        emptyDir: {}
-      - name: {{ template "grafana.name" . }}-persistent-storage
-        persistentVolumeClaim:
-          claimName: {{ .Values.grafana.deployment.persistantVolumeName }}
-      - name: {{ template "grafana.name" . }}-dashboards
-        configMap:
-          name: {{ template "grafana.name" . }}-dashboards
-
-
-{{- else }}
-
-apiVersion: apps/v1beta1
-kind: Deployment
-metadata:
-  labels:
-{{ include "grafana.labels.stakater" . | indent 4 }}
-{{ include "grafana.labels.chart" . | indent 4 }}
-{{- with .Values.grafana.annotations }}
-  annotations:
-    configmap.fabric8.io/update-on-change: {{ .configmapFabric8ioUpdateOnChange }}
   {{- end}}
   name: {{ template "grafana.name" . }}
 spec:
@@ -180,11 +39,10 @@ spec:
             mountPath: /processed
     {{- end }}
       containers:
-      - name: {{ template "grafana.name" . }}
+      - args:
+        - -config=/etc/grafana/grafana.ini
         image: "{{ .Values.grafana.deployment.image.name }}:{{ .Values.grafana.deployment.image.tag }}"
-        {{- if .Values.grafana.deployment.container.clearSecurityContext }}
-        securityContext: {}          
-        {{- end }}
+        name: {{ template "grafana.name" . }}
         readinessProbe:
           httpGet:
             path: {{ .Values.grafana.deployment.environment.path }}
@@ -207,7 +65,11 @@ spec:
         - name: GF_AUTH_PROXY_HEADER_PROPERTY
           value: "{{ .Values.grafana.deployment.environment.authProxyHeaderProperty }}"
         - name: GF_AUTH_DISABLE_LOGIN_FORM
-          value: "{{ .Values.grafana.deployment.environment.authDisableLoginForm }}"
+          value: "{{ .Values.grafana.deployment.environment.authDisableLoginForm }}"    
+        - name: GF_AUTH_ANONYMOUS_ENABLED
+          value: "{{ .Values.grafana.deployment.environment.authAnonymousEnable }}"   
+        - name: GF_AUTH_ANONYMOUS_ORG_ROLE
+          value: "{{ .Values.grafana.deployment.environment.authAnonymousRole }}"      
         - name: GF_SECURITY_ADMIN_USER
           valueFrom:
             secretKeyRef:
@@ -221,8 +83,9 @@ spec:
         volumeMounts:
         - name: {{ template "grafana.name" . }}-storage
           mountPath: /var/{{ template "grafana.name" . }}-storage
-        - name: {{ template "grafana.name" . }}-persistent-storage
-          mountPath: /var/lib/{{ template "grafana.name" . }}
+        - mountPath: /etc/grafana
+          name: grafana-config
+          readOnly: false
         ports:
         - name: {{ .Values.grafana.deployment.environment.ports.name }}
           containerPort: {{ .Values.grafana.deployment.environment.ports.containerPort }}
@@ -246,7 +109,7 @@ spec:
             cpu: {{ . }}
             {{- end }}
           {{- end }}
-        {{- end }}
+        {{- end }}        
       - name: {{ template "grafana.name" . }}-watcher
         image: "{{ .Values.grafana.deployment.watcher.image.name }}:{{ .Values.grafana.deployment.watcher.image.tag }}"
         args:
@@ -284,15 +147,15 @@ spec:
             {{- end }}
           {{- end }}
         {{- end }}
-        volumeMounts:                
+        volumeMounts:
       {{- if .Values.grafana.shouldUseGenericUrl }}
         - name: grafana-subst-config
           mountPath: /var/{{ template "grafana.name" . }}-dashboards
       {{- else }}
         - name: {{ template "grafana.name" . }}-dashboards
           mountPath: /var/{{ template "grafana.name" . }}-dashboards
-      {{- end }}
-          
+      {{- end }}  
+
       {{- if .Values.grafana.deployment.proxy.enabled }}
       - name: proxy
         image: "{{ .Values.grafana.deployment.proxy.image.name }}:{{ .Values.grafana.deployment.proxy.image.tag }}"
@@ -304,20 +167,21 @@ spec:
         volumeMounts:
         - name: keycloak-proxy-config
           mountPath: /etc/config
-      {{- end }}
+      {{- end }}            
       {{- if .Values.grafana.deployment.nodeSelector }}  
       nodeSelector:
         {{ .Values.grafana.deployment.nodeSelector.key }}: {{ .Values.grafana.deployment.nodeSelector.value }}
-      {{- end }}      
+      {{- end }} 
       {{- if .Values.grafana.deployment.clearSecurityContext }}
       securityContext: {}
       {{- end }}
+      serviceAccountName: {{ template "grafana.name" . }}-{{ .Release.Namespace }}
       volumes:
       - name: {{ template "grafana.name" . }}-storage
-        emptyDir: {}
-      - name: {{ template "grafana.name" . }}-persistent-storage
-        persistentVolumeClaim:
-          claimName: {{ .Values.grafana.deployment.persistantVolumeName }}
+        emptyDir: {}       
+      - name: grafana-config
+        secret:
+          secretName: {{ template "grafana.name" . }}-config
     {{- if .Values.grafana.shouldUseGenericUrl }}
       - emptyDir: {}
         name: grafana-subst-config
@@ -330,4 +194,3 @@ spec:
         configMap:
           name: keycloak-proxy
       {{- end }}
-{{- end }}
