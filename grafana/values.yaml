@@ -1,5 +1,5 @@
 grafana:
-  useOpenShift: false
+  config: W2F1dGguYmFzaWNdCmVuYWJsZWQgPSBmYWxzZQpbYXV0aC5hbm9ueW1vdXNdCmVuYWJsZWQgPSB0cnVlCm9yZ19yb2xlID0gRWRpdG9yCg==  
   labels:
     group: com.stakater.platform
     provider: stakater
@@ -29,6 +29,8 @@ grafana:
       authProxyHeaderName: "X-Auth-Email"
       authProxyHeaderProperty: email
       authDisableLoginForm: "true"
+      authAnonymousEnable: "false"
+      authAnonymousRole: "Admin"
       ports:
         name: web
         containerPort: 3000
@@ -74,4 +76,5 @@ grafana:
     ingressClass: internal-ingress
     annotations:
   shouldUseGenericUrl: false     # if true, use the init-container to replace the values in the configmaps
-  configFiles:
+  configFiles:         
+  
