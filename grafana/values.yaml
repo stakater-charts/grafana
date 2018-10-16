@@ -70,10 +70,6 @@ grafana:
     password: dummy
   service:
     expose: "true"
-    ingressPath: /grafana
-    rewriteTarget: /
-    forceSslRedirect: "false"
-    ingressClass: internal-ingress
     annotations:
       config.xposer.stakater.com/IngressURLPath: /grafana
       config.xposer.stakater.com/Domain: stackator.com
