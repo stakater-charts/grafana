@@ -6,23 +6,10 @@ metadata:
     expose: "{{ .Values.grafana.service.expose }}"
 {{ include "grafana.labels.stakater" . | indent 4 }}
 {{ include "grafana.labels.chart" . | indent 4 }}
+{{- if .Values.grafana.service.annotations }}
   annotations:
-    fabric8.io/ingress.path: {{ .Values.grafana.service.ingressPath }}
-    fabric8.io/ingress.annotations: |-
-      ingress.kubernetes.io/rewrite-target: {{ .Values.grafana.service.rewriteTarget }}
-      ingress.kubernetes.io/force-ssl-redirect: {{ .Values.grafana.service.forceSslRedirect }}
-      kubernetes.io/ingress.class: {{ .Values.grafana.service.ingressClass }}
-    {{- with .Values.grafana.forecastle.expose }}
-      forecastle.stakater.com/expose: {{ . }}
-    {{- end }}
-    {{- with .Values.grafana.forecastle.icon }}
-      forecastle.stakater.com/icon: {{ . }}
-    {{- end }}
-      {{- with .Values.grafana.service.annotations }}
-      {{- range $key, $value := . }}
-      {{ $key }}: {{ $value }}
-      {{- end }}
-      {{- end }}
+{{ toYaml .Values.grafana.service.annotations | indent 4 }}
+{{- end }}
 spec:
   ports:
   - port: 80
