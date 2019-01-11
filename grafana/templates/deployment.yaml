@@ -47,12 +47,12 @@ spec:
           httpGet:
             path: {{ .Values.grafana.deployment.environment.path }}
             port: {{ .Values.grafana.deployment.environment.ports.containerPort }}
-          initialDelaySeconds: 60            
+          initialDelaySeconds: 60
         livenessProbe:
           httpGet:
             path: {{ .Values.grafana.deployment.environment.path }}
             port: {{ .Values.grafana.deployment.environment.ports.containerPort }}
-          initialDelaySeconds: 80 
+          initialDelaySeconds: 80
         env:
         - name: GF_AUTH_BASIC_ENABLED
           value: "{{ .Values.grafana.deployment.environment.basicAuthEnabled }}"
@@ -86,6 +86,12 @@ spec:
         - mountPath: /etc/grafana
           name: grafana-config
           readOnly: false
+        {{- if .Values.grafana.deployment.configmapWatcher.dashboards.enabled }}
+        - name: dashboards
+          mountPath: {{ .Values.grafana.dashboards.watcher.folder | quote }}
+        - name: dashboard-providers
+          mountPath: /etc/grafana/provisioning/dashboards
+        {{- end }}
         ports:
         - name: {{ .Values.grafana.deployment.environment.ports.name }}
           containerPort: {{ .Values.grafana.deployment.environment.ports.containerPort }}
@@ -109,7 +115,42 @@ spec:
             cpu: {{ . }}
             {{- end }}
           {{- end }}
-        {{- end }}        
+        {{- end }}
+      {{- if .Values.grafana.deployment.configmapWatcher.datasources.enabled }}
+      - name: datasources-watcher
+        image: {{ include "grafana.configmapwatcher.image" . | quote }}
+        imagePullPolicy: {{ default "" .Values.grafana.deployment.configmapWatcher.image.pullPolicy | quote }}
+        env:
+        - name: LABEL
+          value: "{{ .Values.grafana.datasources.watcher.label }}"
+        - name: FOLDER
+          value: "{{ .Values.grafana.datasources.watcher.folder }}"
+        {{- if .Values.grafana.deployment.configmapWatcher.resources }}
+        resources:
+          {{- toYaml .Values.grafana.deployment.configmapWatcher.resources | trim | nindent 10 -}}
+        {{- end }}
+        volumeMounts:
+        - name: datasources
+          mountPath: {{ .Values.grafana.datasources.watcher.folder | quote }}
+      {{- end }}
+      {{- if .Values.grafana.deployment.configmapWatcher.datasources.enabled }}
+      - name: dashboards-watcher
+        image: {{ include "grafana.configmapwatcher.image" . | quote }}
+        imagePullPolicy: {{ default "" .Values.grafana.deployment.configmapWatcher.image.pullPolicy | quote }}
+        env:
+        - name: LABEL
+          value: "{{ .Values.grafana.dashboards.watcher.label }}"
+        - name: FOLDER
+          value: "{{ .Values.grafana.dashboards.watcher.folder }}"
+        {{- if .Values.grafana.deployment.configmapWatcher.resources }}
+        resources:
+          {{- toYaml .Values.grafana.deployment.configmapWatcher.resources | trim | nindent 10 -}}
+        {{- end }}
+        volumeMounts:
+        - name: dashboards
+          mountPath: {{ .Values.grafana.dashboards.watcher.folder | quote }}
+      {{- end }}
+      {{- if .Values.grafana.deployment.watcher.enabled }}
       - name: {{ template "grafana.name" . }}-watcher
         image: "{{ .Values.grafana.deployment.watcher.image.name }}:{{ .Values.grafana.deployment.watcher.image.tag }}"
         args:
@@ -155,7 +196,7 @@ spec:
         - name: {{ template "grafana.name" . }}-dashboards
           mountPath: /var/{{ template "grafana.name" . }}-dashboards
       {{- end }}  
-
+      {{- end }}
       {{- if .Values.grafana.deployment.proxy.enabled }}
       - name: proxy
         image: "{{ .Values.grafana.deployment.proxy.image.name }}:{{ .Values.grafana.deployment.proxy.image.tag }}"
@@ -178,7 +219,7 @@ spec:
       serviceAccountName: {{ template "grafana.name" . }}-{{ .Release.Namespace }}
       volumes:
       - name: {{ template "grafana.name" . }}-storage
-        emptyDir: {}       
+        emptyDir: {}
       - name: grafana-config
         secret:
           secretName: {{ template "grafana.name" . }}-config
@@ -186,11 +227,24 @@ spec:
       - emptyDir: {}
         name: grafana-subst-config
     {{- end }}
+      {{- if .Values.grafana.deployment.watcher.enabled }}
       - name: {{ template "grafana.name" . }}-dashboards
         configMap:
           name: {{ template "grafana.name" . }}-dashboards
+      {{- end }}
       {{- if .Values.grafana.deployment.proxy.enabled }}
       - name: keycloak-proxy-config
         configMap:
           name: keycloak-proxy
+      {{- end }}
+      {{- if .Values.grafana.deployment.configmapWatcher.datasources.enabled }}
+      - name: datasources
+        emptyDir: {}
+      {{- end }}
+      {{- if .Values.grafana.deployment.configmapWatcher.dashboards.enabled }}
+      - name: dashboards
+        emptyDir: {}
+      - name: dashboard-providers
+        configMap:
+          name: {{ template "grafana.name" . }}-dashboard-providers
       {{- end }}

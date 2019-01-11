@@ -1,0 +1,20 @@
+{{- if .Values.grafana.deployment.configmapWatcher.dashboards.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "grafana.name" . }}-dashboard-providers
+  labels:
+{{ include "grafana.labels.stakater" . | indent 4 }}
+{{ include "grafana.labels.chart" . | indent 4 }}
+data:
+  provider.yaml: |-
+    apiVersion: 1
+    providers:
+    - name: 'default'
+      orgId: 1
+      folder: ''
+      type: file
+      disableDeletion: false
+      options:
+        path: {{ .Values.grafana.dashboards.watcher.folder }}
+{{- end }}
