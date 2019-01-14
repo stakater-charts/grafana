@@ -93,7 +93,7 @@ spec:
           mountPath: /etc/grafana/provisioning/dashboards
         {{- end }}
         {{- if .Values.grafana.deployment.configmapWatcher.datasources.enabled }}
-        - name: datasources
+        - name: default-datasources
           mountPath: /etc/grafana/provisioning/datasources
         {{- end }}
         ports:
@@ -259,4 +259,7 @@ spec:
       - name: dashboard-providers
         configMap:
           name: {{ template "grafana.name" . }}-dashboard-providers
+      - name: default-datasources
+        configMap:
+          name: {{ template "grafana.name" . }}-datasources
       {{- end }}
