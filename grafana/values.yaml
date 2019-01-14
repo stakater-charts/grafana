@@ -1,3 +1,7 @@
+global:
+  image:
+    registry:
+
 grafana:
   config: W2F1dGguYmFzaWNdCmVuYWJsZWQgPSBmYWxzZQpbYXV0aC5hbm9ueW1vdXNdCmVuYWJsZWQgPSB0cnVlCm9yZ19yb2xlID0gRWRpdG9yCg==  
   labels:
@@ -35,6 +39,7 @@ grafana:
         name: web
         containerPort: 3000
     watcher:
+      enabled: true
       image:
         name: quay.io/coreos/grafana-watcher
         tag: v0.0.8
@@ -51,6 +56,17 @@ grafana:
         enableAuthorization: "false"
         redirectionUrl: /grafana
     persistantVolumeName: grafana-persistent-storage
+    configmapWatcher:
+      image:
+        registry:
+        name: kiwigrid/k8s-sidecar
+        tag: "0.0.6"
+        pullPolicy:
+      datasources:
+        enabled: false
+      dashboards:
+        enabled: false
+      
   # resources:
   #   requests:
   #     memory: 100Mi
@@ -66,8 +82,8 @@ grafana:
   #     cpu: 50m
   #     memory: 16Mi
   secrets:
-    user: dummy
-    password: dummy
+    user: ""
+    password: ""
   service:
     expose: "true"
     annotations:
@@ -86,4 +102,14 @@ grafana:
 # forecastle.stakater.com/icon: https://cdn-images-1.medium.com/max/521/0*D__TQ7qMdoq3Y7kP.png
   shouldUseGenericUrl: false     # if true, use the init-container to replace the values in the configmaps
   configFiles:         
-  
+  datasources:
+    additionalDataSourceDefs: {}
+    includeDefaults: true
+    prometheusDatasourceUrl: http://prometheus
+    watcher:
+      folder: /tmp/datasources
+      label: grafana.datasource.test
+  dashboards:
+    watcher:
+      folder: /tmp/dashboards
+      label: grafana.dashboard.test

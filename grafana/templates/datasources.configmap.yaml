@@ -1,0 +1,24 @@
+{{- if .Values.grafana.deployment.configmapWatcher.datasources.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "grafana.name" . }}-datasources
+  labels:
+{{ include "grafana.labels.stakater" . | indent 4 }}
+{{ include "grafana.labels.chart" . | indent 4 }}
+    {{ .Values.grafana.datasources.watcher.label }}: ""
+data:
+  {{- if .Values.grafana.datasources.additionalDataSourceDefs -}}
+  {{- toYaml .Values.grafana.datasources.additionalDataSourceDefs | trim | nindent 2 -}}
+  {{- end -}}
+  {{- if .Values.grafana.datasources.includeDefaults }}
+  default-datasources.yaml: |-
+    apiVersion: 1
+    datasources:
+    - name: prometheus
+      type: prometheus
+      access: proxy
+      url: {{ .Values.grafana.datasources.prometheusDatasourceUrl }}
+      orgId: 1
+  {{- end -}}
+{{- end }}

@@ -1,3 +1,4 @@
+{{- if .Values.grafana.deployment.watcher.enabled }}
 ---
 apiVersion: v1
 kind: List
@@ -20,4 +21,5 @@ items:
 {{- range $key, $value := .Values.grafana.configFiles }}
     {{ $key }}: |
 {{ $value | indent 6 }}
+{{- end }}
 {{- end }}
