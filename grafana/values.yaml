@@ -109,7 +109,9 @@ grafana:
     watcher:
       folder: /tmp/datasources
       label: grafana.datasource.test
+      namespace:
   dashboards:
     watcher:
       folder: /tmp/dashboards
       label: grafana.dashboard.test
+      namespace:
