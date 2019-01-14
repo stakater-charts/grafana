@@ -1,7 +1,7 @@
 apiVersion: v1
 name: grafana
 description: grafana chart that runs on kubernetes
-version: 1.0.33
+version: 1.0.34
 keywords:
   - grafana
   - kubernetes
