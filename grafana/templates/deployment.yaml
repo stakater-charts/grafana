@@ -92,6 +92,10 @@ spec:
         - name: dashboard-providers
           mountPath: /etc/grafana/provisioning/dashboards
         {{- end }}
+        {{- if .Values.grafana.deployment.configmapWatcher.datasources.enabled }}
+        - name: datasources
+          mountPath: /etc/grafana/provisioning/datasources
+        {{- end }}
         ports:
         - name: {{ .Values.grafana.deployment.environment.ports.name }}
           containerPort: {{ .Values.grafana.deployment.environment.ports.containerPort }}
