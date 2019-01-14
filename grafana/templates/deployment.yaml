@@ -129,6 +129,10 @@ spec:
           value: "{{ .Values.grafana.datasources.watcher.label }}"
         - name: FOLDER
           value: "{{ .Values.grafana.datasources.watcher.folder }}"
+        {{- if .Values.grafana.datasources.watcher.namespace }}
+        - name: NAMESPACE
+          value: "{{ .Values.grafana.datasources.watcher.namespace }}"
+        {{- end }}
         {{- if .Values.grafana.deployment.configmapWatcher.resources }}
         resources:
           {{- toYaml .Values.grafana.deployment.configmapWatcher.resources | trim | nindent 10 -}}
@@ -146,6 +150,10 @@ spec:
           value: "{{ .Values.grafana.dashboards.watcher.label }}"
         - name: FOLDER
           value: "{{ .Values.grafana.dashboards.watcher.folder }}"
+        {{- if .Values.grafana.dashboards.watcher.namespace }}
+        - name: NAMESPACE
+          value: "{{ .Values.grafana.dashboards.watcher.namespace }}"
+        {{- end }}
         {{- if .Values.grafana.deployment.configmapWatcher.resources }}
         resources:
           {{- toYaml .Values.grafana.deployment.configmapWatcher.resources | trim | nindent 10 -}}
