@@ -63,9 +63,9 @@ grafana:
         tag: "0.0.6"
         pullPolicy:
       datasources:
-        enabled: true
+        enabled: false
       dashboards:
-        enabled: true
+        enabled: false
       
   # resources:
   #   requests:
