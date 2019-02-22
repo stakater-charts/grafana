@@ -38,6 +38,10 @@ spec:
           - name: grafana-subst-config
             mountPath: /processed
     {{- end }}
+    {{- if .Values.grafana.tolerations }}
+      tolerations:
+{{ toYaml .Values.grafana.tolerations | indent 8 -}}
+      {{- end }}
       containers:
       - args:
         - -config=/etc/grafana/grafana.ini
