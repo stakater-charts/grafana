@@ -227,7 +227,7 @@ spec:
       {{- end }}            
       {{- if .Values.grafana.deployment.nodeSelector }}  
       nodeSelector:
-        {{ .Values.grafana.deployment.nodeSelector.key }}: {{ .Values.grafana.deployment.nodeSelector.value }}
+        {{ .Values.grafana.deployment.nodeSelector.key }}: "{{ .Values.grafana.deployment.nodeSelector.value }}"
       {{- end }} 
       {{- if .Values.grafana.deployment.clearSecurityContext }}
       securityContext: {}
