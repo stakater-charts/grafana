@@ -3,6 +3,7 @@ global:
     registry:
 
 grafana:
+  plugins: {}
   config: W2F1dGguYmFzaWNdCmVuYWJsZWQgPSBmYWxzZQpbYXV0aC5hbm9ueW1vdXNdCmVuYWJsZWQgPSB0cnVlCm9yZ19yb2xlID0gRWRpdG9yCg==  
   labels:
     group: com.stakater.platform

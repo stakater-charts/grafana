@@ -58,6 +58,10 @@ spec:
             port: {{ .Values.grafana.deployment.environment.ports.containerPort }}
           initialDelaySeconds: 80
         env:
+        {{- if .Values.grafana.plugins }}
+        - name: GF_INSTALL_PLUGINS
+          value: {{ join "," .Values.grafana.plugins }}
+        {{- end }}
         - name: GF_AUTH_BASIC_ENABLED
           value: "{{ .Values.grafana.deployment.environment.basicAuthEnabled }}"
         - name: GF_SERVER_ROOT_URL
